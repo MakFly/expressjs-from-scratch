@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql-swagger-jwt-atecna
+    restart: always
+    command: --max_allowed_packet=32505856      # Set max_allowed_packet to 256M (or any other value)
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=app
+    volumes:
+      - db:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  adminer:
+    container_name: adminer-swagger-jwt-atecna
+    image: adminer:4.7.7
+    restart: unless-stopped
+    volumes:
+      - adminer-data:/var/lib/adminer
+    ports:
+        - "9080:8080"
+    depends_on:
+        - mysql
+
+volumes: 
+  db:
+  adminer-data:
