@@ -3,10 +3,10 @@
   "sideEffects": false,
   "scripts": {
     "start": "tsc && node dist/custom-server.js",
-    "dev": "npm run swagger-autogen && vite",
+    "dev": "npm run swagger-autogen && vite --port=3000",
     "dev:old": "nodemon -L -e ts --exec \"npm run swagger-autogen && npm run build && npm start\"",
     "build": "tsc",
-    "swagger-autogen": "node ./src/server/swagger.ts",
+    "swagger-autogen": "node ./src/swagger.ts",
     "lint": "eslint . --ext .ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "test-fake": "node ./src/server/test/fake-clt.js"

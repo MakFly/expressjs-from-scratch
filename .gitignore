@@ -8,3 +8,4 @@ cypress/downloads
 cypress/videos
 coverage
 .env
+package-lock.json

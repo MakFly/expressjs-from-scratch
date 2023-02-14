@@ -1,9 +1,9 @@
 import express, { Application, Request, Response } from 'express';
 import swaggerUi from 'swagger-ui-express';
-import * as swaggerDocument from './src/server/swagger/swagger_output.json';
+import * as swaggerDocument from './src/swagger/swagger_output.json';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import indexRouter from './src/server/routes/index';
+import indexRouter from './src/routes/index';
 
 class Server {
 
@@ -26,7 +26,7 @@ class Server {
     this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
     this.app.listen(this.port, () => {
-      return console.log(`Express is listening at http://localhost:${this.port}`);
+      return console.log(`Express is listening at http://127.0.0.1:${this.port}`);
     });
   }
 

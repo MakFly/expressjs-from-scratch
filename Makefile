@@ -2,10 +2,7 @@
 
 update-nodejs:
 	npm update
-
-reset-prisma:
-	prisma reset
-
+	
 build:
 	docker-compose up --build
 
