@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { Last30Days } from "../models/last30Days";
-import { EventLast30Days } from "../events/eventEmitter";
+import { EventLast30Days } from "../events/eventLast30days";
 
 const prisma = new PrismaClient();
 
@@ -34,7 +34,7 @@ class Last30DaysController {
   static getProfile = async (req: Request, res: Response, next: NextFunction) => {
     // #swagger.tags = ['Users']
 
-    const data = EventLast30Days.addLast30Days(res, next);
+    const data = EventLast30Days.eventLast30days(res, next);
     data.then((data: any) => {
       res.status(200).send(data);
       return;

@@ -13,7 +13,7 @@ export class EventLast30Days {
   // v = vitesse , d = distance , t = temps en heure ( le t se calcule : 8h41mn = 8 + (41/60))
   // Récupéré l'object trophée qui est égale au dernier trophé accomplit
 
-  static addLast30Days = async (res: Response, next: NextFunction) => {
+  static eventLast30days = async (res: Response, next: NextFunction) => {
     const userId: number = parseInt(res.locals.jwtPayload.id);
 
     // You find on the user's profile page of data in last 30 days
