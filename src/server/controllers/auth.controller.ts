@@ -1,12 +1,9 @@
-import { PrismaClient } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import config from "../config/config";
 import { User } from "../models/User";
 import { checkIfUnencryptedPasswordIsValid } from "../services/crypt.services";
-import UserService from "../services/utils/users.service";
-
-const prisma = new PrismaClient();
+import { UserService } from "../services/utils/users.service";
 
 class AuthController {
   // Login
@@ -22,19 +19,11 @@ class AuthController {
       });
     }
 
-    let userRepository: User = {};
-    //Get user from database
+    let userRepository: User;
     try {
-
-
-      let x = UserService.getUsers(email).then((res) => { return res })
-      console.log(x)
-
-      userRepository = await prisma.user.findUniqueOrThrow({
-        where: {
-          email: email,
-        },
-      });
+      //Get user from database
+      userRepository = await UserService.getUsers(email)
+        .then(res => { return res })
       res.status(200);
     } catch (error) {
       res.json({ status: 404, message: "User not found" });
@@ -69,7 +58,7 @@ class AuthController {
     }
   };
 
-  static refreshLogin = (req: Request, res: Response, next: NextFunction) => {
+  static refreshLogin = (req: Request, res: Response) => {
     const authHeader = req.headers["authorization"] || req.body.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
 

@@ -23,20 +23,18 @@ const endpointsFiles = ['./Routes/index.ts']
 swaggerAutogen(outputFile, endpointsFiles)
 ```
 
-# 2. Doc officiel swagger
-<https://github.com/davibaltar/swagger-autogen#openapi-3x>
 
-# cookieSession example
-<https://sergiodxa.com/articles/working-with-refresh-tokens-in-remix>
 
-## Probleme sous mac
 
+## Probleme 
+
+# Mysql ( sous mac uniquement )
 # 1 : le soucis était qu'il fallait update mysql pour la compatibilité entre mysql et prisma sous expressjs
-
 cd /Applications/XAMPP/xamppfiles/bin/
 myslq_upgrade --force
 
 
-## At read
+## Resources
 https://dev.to/xjamundx/adding-a-rest-api-to-your-vite-server-in-5-seconds-270g
 https://dev.to/kevinqtogitty/how-to-set-up-an-express-server-with-typescript-and-es6-import-statements-using-vite-9l6
+<https://github.com/davibaltar/swagger-autogen#openapi-3x>
