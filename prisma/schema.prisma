@@ -22,11 +22,61 @@ datasource db {
 //   authorId  Int
 // }
 
+model Trophies {
+  id           Int          @id @default(autoincrement())
+  nameTrophies String
+  label        String
+  value        String
+  earned       Boolean
+  tier         Int
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  last30Days   Last30days[]
+  User         User?        @relation(fields: [userId], references: [id])
+  userId       Int?
+}
+
+model Workouts {
+  id             Int              @id @default(autoincrement())
+  date           DateTime         @default(now())
+  WorkoutDetails WorkoutDetails[]
+  User           User?            @relation(fields: [userId], references: [id])
+  userId         Int?
+}
+
+model WorkoutDetails {
+  id         Int      @id @default(autoincrement())
+  date       DateTime @default(now())
+  distance   Float
+  time       String
+  checkpoint Json
+  workouts   Workouts @relation(fields: [workoutId], references: [id])
+  workoutId  Int
+}
+
+model Last30days {
+  id               Int       @id @default(autoincrement())
+  workoutNumber    Int
+  totalKilometer   String
+  totalTime        String
+  fastestKilometer String
+  Trophies         Trophies? @relation(fields: [trophiesId], references: [id])
+  trophiesId       Int?
+  User             User?     @relation(fields: [userId], references: [id])
+  userId           Int?
+}
+
 model User {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
-  password String
-  role     Role    @default(USER)
+  id         Int          @id @default(autoincrement())
+  email      String       @unique
+  password   String
+  city       String?      @db.VarChar(255)
+  avatar     String?      @db.VarChar(255)
+  token      String?      @db.VarChar(255)
+  workouts   Workouts[]
+  trophy     Trophies[]
+  last30days Last30days[]
+  role       Role         @default(USER)
 }
 
 enum Role {

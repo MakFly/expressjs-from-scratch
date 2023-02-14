@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { User } from "../models/User";
-import { hashPassword } from "../services/crypt.services";
 import jwtDecode from "jwt-decode";
-import { UserService } from "../services/utils/users.service";
+import { UserService } from "../services/utils/users.services";
 
 const prisma = new PrismaClient();
 

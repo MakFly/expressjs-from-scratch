@@ -3,7 +3,7 @@ import * as jwt from "jsonwebtoken";
 import config from "../config/config";
 import { User } from "../models/User";
 import { checkIfUnencryptedPasswordIsValid } from "../services/crypt.services";
-import { UserService } from "../services/utils/users.service";
+import { UserService } from "../services/utils/users.services";
 
 class AuthController {
   // Login
@@ -90,7 +90,8 @@ class AuthController {
   // Generate Token
   static generateToken = (user: User) => {
     return jwt.sign({ id: user.id, email: user.email }, config.jwtSecret, {
-      expiresIn: "20s",
+      // expiresIn: "20s",
+      expiresIn: "1h",
     });
   };
 
@@ -99,7 +100,7 @@ class AuthController {
     return jwt.sign(
       { id: user.id, email: user.email },
       config.jwtRefreshSecret,
-      { expiresIn: "10m" }
+      { expiresIn: "1h" }
     );
   };
 
