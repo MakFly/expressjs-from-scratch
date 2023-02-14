@@ -114,12 +114,12 @@
         }
       }
     },
-    "/users/{id}": {
+    "/users/{id([0-9]+)}": {
       "get": {
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "id([0-9]+)",
             "in": "path",
             "required": true,
             "type": "string"
@@ -144,7 +144,7 @@
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "id([0-9]+)",
             "in": "path",
             "required": true,
             "type": "string"
@@ -172,7 +172,7 @@
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "id([0-9]+)",
             "in": "path",
             "required": true,
             "type": "string"

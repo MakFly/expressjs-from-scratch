@@ -16,10 +16,13 @@ export class last30daysService {
             },
         });
 
+        console.log("lastrophie" + JSON.stringify(lastTrophy));
         return lastTrophy;
     }
 
     static mergeObject = (workoutUser, idLastTrophies?) => {
+        const dataTest = "5mn45/km";
+
         const newDataLast30days = workoutUser.map((res: any) => {
             const {
                 id,
@@ -59,7 +62,7 @@ export class last30daysService {
                     result.totalKilometer.toString().replace(".", ",") + "km",
             },
             { totalTime: result.totalTime.toString().replace(".", "h") + "mn" },
-            { fastestKilometer: "5mn45/km" },
+            { fastestKilometer: dataTest },
             { lastTrophy: idLastTrophies?.id }
         );
 

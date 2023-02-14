@@ -56,10 +56,7 @@ export class EventLast30Days {
       if (idLastTrophies.id !== undefined) {
         if (findUserByid.exist !== false) {
           idLast30days = findUserByid.data.find(last30Days => last30Days.id)?.id;
-          console.log("🚀 ~ file: eventEmitter.ts:51 ~ EventEmitter ~ addLast30Days= ~ idLast30days", idLast30days)
-
           workoutNumber = findUserByid.data.find(last30Days => last30Days.id)?.workoutNumber;
-          console.log("🚀 ~ file: eventEmitter.ts:53 ~ EventEmitter ~ addLast30Days= ~ workoutNumber", workoutNumber)
         }
       } else {
         console.log("Please wait...")
@@ -73,15 +70,17 @@ export class EventLast30Days {
       const data = last30daysService.createInputLast30days(mergeData, userId);
 
       let eventResult: { id: number; workoutNumber: number; totalKilometer: string; totalTime: string; fastestKilometer: string; trophiesId: number; userId: number; };
+      console.log(workoutNumber)
+      console.log(data.workoutNumber)
       if (findUserByid.exist === false) {
         eventResult = await last30daysService.add(data);
       } else if (workoutNumber != data.workoutNumber) {
+        console.log("��� ~ file: eventEmitter.ts:54 ~ EventEmitter ~ update");
         eventResult = await last30daysService.update(data, idLast30days);
       } else {
+        console.log("��������� ~ file: eventEmitter.ts:82")
         eventResult = await last30daysService.findData(userId);
       }
-      prisma.$disconnect();
-
       return eventResult
     } else {
       return { status: 401 }
