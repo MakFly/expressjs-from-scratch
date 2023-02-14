@@ -14,13 +14,13 @@ router.get("/", [checkJwt, checkRole(["USER", "ADMIN"])], UserController.listAll
 router.post("/", UserController.newUser);
 
 // Get user role
-router.get("/:id", [checkJwt], UserController.getOneById)
+router.get("/:id([0-9]+)", [checkJwt], UserController.getOneById)
 
 // Edit User
-router.patch("/:id", [checkJwt], UserController.editUser)
+router.patch("/:id([0-9]+)", [checkJwt], UserController.editUser)
 
 // Delete User
-router.delete("/:id", [checkJwt], UserController.deleteUser)
+router.delete("/:id([0-9]+)", [checkJwt], UserController.deleteUser)
 
 // Get user role
 router.get("/role", [checkJwt], UserController.getUserRole)

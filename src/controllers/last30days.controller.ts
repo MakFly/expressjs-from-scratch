@@ -16,21 +16,7 @@ class Last30DaysController {
     //Send the last30days object
     res.status(200).send(last30days);
   };
-
-  static existLast30days = async (req: Request, res: Response) => {
-    // const userId: number = parseInt(res.locals.jwtPayload.id);
-    // const existLast30days: Last30Days[] = await prisma.last30days.findMany({
-    //   where: {
-    //     userId: userId,
-    //   },
-    // });
-    // if (existLast30days.length > 0) {
-    //   return res.status(201).json({ exist: true, data: existLast30days });
-    // } else {
-    //   return { exist: false, data: [] };
-    // }
-  };
-
+  
   static getProfile = async (req: Request, res: Response, next: NextFunction) => {
     // #swagger.tags = ['Users']
 

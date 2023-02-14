@@ -9,9 +9,6 @@ const router = Router();
 //Get resume on last 30 days
 router.get("/resume", [checkJwt, checkRole([Roles.USER, Roles.ADMIN])], Last30DaysController.getProfile);
 
-//Get profile on last 30 days
-// router.get("/existlast30days/:id([0-9]+)", [checkJwt, checkRole([Roles.USER, Roles.ADMIN])], Last30DaysController.existLast30days);
-
 //Update Profile on last 30 days
 router.post("/profile", Last30DaysController.updateProfile);
 
