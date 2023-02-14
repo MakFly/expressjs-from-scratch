@@ -16,15 +16,24 @@ class Last30DaysController {
     //Send the last30days object
     res.status(200).send(last30days);
   };
-  
-  static getProfile = async (req: Request, res: Response, next: NextFunction) => {
+
+  static getProfile = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     // #swagger.tags = ['Users']
 
     const data = EventLast30Days.eventLast30days(res, next);
     data.then((data: any) => {
-      res.status(200).send(data);
-      return;
-    })
+      if (data.status !== 500) {
+        res.status(200).send(data);
+        return;
+      } else {
+        res.status(data.status).send(data.message);
+        return;
+      }
+    });
   };
 
   // Update of profile by user id on the last 30 days
