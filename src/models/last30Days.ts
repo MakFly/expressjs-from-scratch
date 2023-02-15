@@ -1,6 +1,6 @@
 import { Trophies, User } from "@prisma/client";
 
-export class Last30Days {
+export class ModelLast30Days {
     id?: number;
     workoutNumber?: number;
     totalKilometer?: string;
@@ -12,5 +12,5 @@ export class Last30Days {
 
 export interface Last30DaysType {
     exist: boolean,
-    data: Last30Days[]
+    data: ModelLast30Days[]
 }

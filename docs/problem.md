@@ -1,5 +1,5 @@
-# Probleme 
-## Mysql ( sous mac uniquement )
-## Le soucis était qu'il fallait update mysql pour la compatibilité entre mysql et prisma sous expressjs
+# Problems
+## Mysql ( on mac )
+## The problem was to update mysql for compatibility between mysql and prisma under expressjs
 cd /Applications/XAMPP/xamppfiles/bin/
 myslq_upgrade --force

@@ -1,9 +1,9 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { last30daysDto } from "../../dto/last30daysDto";
+import { last30daysDto } from "../../dto/last30days.dto";
 
 const prisma = new PrismaClient();
 
-export class last30daysService {
+export class Last30daysService {
     static findFirstLastTrophie = async () => {
         const lastTrophy = await prisma.trophies.findFirst({
             orderBy: [
@@ -16,12 +16,11 @@ export class last30daysService {
             },
         });
 
-        console.log("lastrophie" + JSON.stringify(lastTrophy));
         return lastTrophy;
     }
 
-    static mergeObject = (workoutUser, idLastTrophies?) => {
-        const dataTest = "5mn45/km";
+    static mergeObject = (workoutUser: any, idLastTrophies: any) => {
+        const dataFastestKilometer = "5mn45/km"; // at change => calculate automatically after
 
         const newDataLast30days = workoutUser.map((res: any) => {
             const {
@@ -52,7 +51,7 @@ export class last30daysService {
         };
 
         const result = newDataLast30days.reduce(
-            (acc, obj) => (acc = deepMergeSum(acc, obj))
+            (acc: any, obj: any) => (acc = deepMergeSum(acc, obj))
         );
 
         const resume: last30daysDto = Object.assign(
@@ -62,11 +61,22 @@ export class last30daysService {
                     result.totalKilometer.toString().replace(".", ",") + "km",
             },
             { totalTime: result.totalTime.toString().replace(".", "h") + "mn" },
-            { fastestKilometer: dataTest },
+            { fastestKilometer: dataFastestKilometer },
             { lastTrophy: idLastTrophies?.id }
         );
 
         return resume;
+    }
+
+    static findLastTrophy30days = (idLast30days: number) => {
+        return prisma.last30days.findUnique({
+            select: {
+                trophiesId: true
+            },
+            where: {
+                id: idLast30days,
+            },
+        })
     }
 
     static createInputLast30days = (resume: any, userId: number) => {
@@ -91,14 +101,18 @@ export class last30daysService {
         return last30Days;
     }
 
-    static findData = async (userId) => {
-        console.log(userId);
-        const last30Days = await prisma.last30days.findFirstOrThrow({
-            where: {
-                User: {
-                    id: userId,
-                },
+    static findData = async (userId: number) => {
+        const last30Days = await prisma.last30days.findFirst({
+            select: {
+                workoutNumber: true,
+                totalKilometer: true,
+                totalTime: true,
+                fastestKilometer: true,
+                Trophies: true
             },
+            where: {
+                userId: userId
+            }
         });
         return last30Days;
     }
@@ -109,16 +123,21 @@ export class last30daysService {
         });
     }
 
-    static update = async (responseData: any, responseId: number) => {
+    static update = async (responseData: any, idLast30days: number) => {
         return prisma.last30days.update({
             where: {
-                id: responseId
+                id: idLast30days
             },
             data: {
                 workoutNumber: responseData.workoutNumber,
                 totalKilometer: responseData.totalKilometer,
                 totalTime: responseData.totalTime,
-                fastestKilometer: responseData.fastestKilometer
+                fastestKilometer: responseData.fastestKilometer,
+                Trophies: {
+                    connect: {
+                        id: responseData.Trophies.connect.id,
+                    },
+                },
             }
         });
     }

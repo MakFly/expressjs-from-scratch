@@ -1,20 +1,25 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { NextFunction, Response } from "express";
 import { Last30Days, Last30DaysType } from "../models/last30Days";
-import { last30daysService } from "../services/utils/last30days.services";
+import { Last30daysService } from "../services/utils/last30days.services";
 
 const prisma = new PrismaClient();
 
 export class EventLast30Days {
-  // Nous devons rechercher tt les workout que l'utilisateur a accomplit
-  // Additionner le nombre de km parcourue via tous les workouts
-  // Additionner le temps total => le ressortir en heures + mn
-  // Calculer combien de km/mn il a pu effectué durant tt ses workouts ( formule = v = d / t)
-  // v = vitesse , d = distance , t = temps en heure ( le t se calcule : 8h41mn = 8 + (41/60))
-  // Récupéré l'object trophée qui est égale au dernier trophé accomplit
+  // We need to search for all the workouts that the user has completed
+  // Add up the number of kilometers covered by all the workouts
+  // Add up the total time => get it in hours + minutes
+  // Calculate how many km/mn he could do during all his workouts (formula = v = d / t)
+  // v = speed, d = distance, t = time in hours (t is calculated : 8h41mn = 8 + (41/60))
+  // Recover the trophy object which is equal to the last trophy accomplished
 
-  static eventLast30days = async (res: Response, next: NextFunction) => {
+  static eventLast30days = async (res: Response) => {
+
+    // Find userId
     const userId: number = parseInt(res.locals.jwtPayload.id);
+
+    // Find idLastTrophies
+    const idLastTrophies = await Last30daysService.findFirstLastTrophie();
 
     // You find on the user's profile page of data in last 30 days
     const existLast30days: Last30Days[] = await prisma.last30days.findMany({
@@ -22,19 +27,6 @@ export class EventLast30Days {
         userId: userId,
       },
     });
-
-    let findUserByid: Last30DaysType;
-    if (existLast30days.length === 0) {
-      findUserByid = {
-        exist: false,
-        data: []
-      }
-    } else if (existLast30days.length >= 1) {
-      findUserByid = {
-        exist: true,
-        data: existLast30days
-      }
-    }
 
     const workoutUser = await prisma.workoutDetails.findMany({
       where: {
@@ -47,43 +39,41 @@ export class EventLast30Days {
       },
     });
 
-    // console.log(workoutUser);
     if (workoutUser.length > 0) {
-      const idLastTrophies = await last30daysService.findFirstLastTrophie();
 
-      let idLast30days: number = 0;
-      let workoutNumber: number = 0;
-      if (idLastTrophies.id !== undefined) {
-        if (findUserByid.exist !== false) {
-          idLast30days = findUserByid.data.find(last30Days => last30Days.id)?.id;
-          workoutNumber = findUserByid.data.find(last30Days => last30Days.id)?.workoutNumber;
-        }
-      } else {
-        console.log("Please wait...")
-        // return res.status(200).json({ message: "Not resume for the moment in your profile" })
-      }
+      let dataUserLast30days: Last30DaysType;
 
       // Merge Object
-      const mergeData = last30daysService.mergeObject(workoutUser, idLastTrophies);
+      const merge = Last30daysService.mergeObject(workoutUser, idLastTrophies)
 
       // Find create Input fields for the last30Days
-      const data = last30daysService.createInputLast30days(mergeData, userId);
+      const data = Last30daysService.createInputLast30days(merge, userId);
 
-      let eventResult: { id: number; workoutNumber: number; totalKilometer: string; totalTime: string; fastestKilometer: string; trophiesId: number; userId: number; };
-      console.log(workoutNumber)
-      console.log(data.workoutNumber)
-      if (findUserByid.exist === false) {
-        eventResult = await last30daysService.add(data);
-      } else if (workoutNumber != data.workoutNumber) {
-        console.log("��� ~ file: eventEmitter.ts:54 ~ EventEmitter ~ update");
-        eventResult = await last30daysService.update(data, idLast30days);
+      if (existLast30days.length > 0) {
+        dataUserLast30days = {
+          exist: true,
+          data: existLast30days
+        }
       } else {
-        console.log("��������� ~ file: eventEmitter.ts:82")
-        eventResult = await last30daysService.findData(userId);
+        await Last30daysService.add(data);
+        return await Last30daysService.findData(userId);
       }
-      return eventResult
+
+      let idLast30days: number = dataUserLast30days.data.find(last30Days => last30Days.id)?.id;
+      let workoutNumber: number = dataUserLast30days.data.find(last30Days => last30Days.id)?.workoutNumber;
+
+      // Find last 30 days id trophy
+      const lastTrophy30days = await Last30daysService.findLastTrophy30days(idLast30days);
+
+      if (idLastTrophies.id !== lastTrophy30days.trophiesId) {
+        await Last30daysService.update(data, idLast30days);
+      } else if (workoutNumber !== data.workoutNumber) {
+        await Last30daysService.update(data, idLast30days);
+      }
+      return await Last30daysService.findData(userId);
     } else {
-      return { status: 401 }
+      // return { status: 500, message: "workout not found for this user" }
+      throw new Error("workout not found for this user");
     }
   };
 }
