@@ -34,3 +34,9 @@ reset-docker:
 
 insp:
 	docker inspect network
+
+adminer:
+	open http://localhost:9080
+
+phpmyadmin:
+	open http://127.0.0.1/phpmyadmin/index.php

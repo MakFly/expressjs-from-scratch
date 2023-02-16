@@ -1,9 +1,9 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
-import * as swaggerDocument from './src/swagger/swagger_output.json';
+import * as swaggerDocument from '../../src/swagger/swagger_output.json';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import indexRouter from './src/routes/index';
+import indexRouter from '../../src/routes/index';
 import morgan from 'morgan';
 
 const app = express();

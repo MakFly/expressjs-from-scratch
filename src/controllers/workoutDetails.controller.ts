@@ -12,6 +12,9 @@ class WorkoutDetailsController {
     const workoutsDetails: WorkoutDetails[] =
       await prisma.workoutDetails.findMany();
 
+    if (workoutsDetails.length === 0) {
+      return res.status(204).send([]);
+    }
     //Send the users object
     res.send(workoutsDetails);
   };
@@ -23,20 +26,21 @@ class WorkoutDetailsController {
     const idParams = parseInt(req.params.id);
 
     if (idParams !== userIdJwt) {
-      res.status(401).send({ message: 'Invalid user id.' });
+      res.status(401).send({ message: "Invalid user id." });
       return;
     }
 
-    const workoutDetails: WorkoutDetails[] = await prisma.workoutDetails.findMany({
-      where: {
-        workouts: {
-          userId: userIdJwt
-        }
-      },
-      include: {
-        workouts: true
-      },
-    });
+    const workoutDetails: WorkoutDetails[] =
+      await prisma.workoutDetails.findMany({
+        where: {
+          workouts: {
+            userId: userIdJwt,
+          },
+        },
+        include: {
+          workouts: true,
+        },
+      });
 
     res.send(workoutDetails);
   };

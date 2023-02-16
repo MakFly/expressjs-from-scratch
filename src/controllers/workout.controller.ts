@@ -15,7 +15,7 @@ class WorkoutController {
     const workouts: Workout[] = await prisma.workouts.findMany();
 
     if (workouts.length === 0) {
-      return res.status(404).json({ message: "No workouts found" });
+      return res.status(204).send([]);
     }
     return res.status(200).send(workouts);
   };

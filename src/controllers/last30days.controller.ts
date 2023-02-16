@@ -13,6 +13,10 @@ class Last30DaysController {
     //Get last30days from database
     const last30days: ModelLast30Days[] = await prisma.last30days.findMany();
 
+    if ( last30days.length === 0 ) {
+      return res.status(204).send([]);
+    }
+
     //Send the last30days object
     res.status(200).send(last30days);
     return;
