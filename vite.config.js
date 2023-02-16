@@ -4,7 +4,7 @@ import mix from 'vite-plugin-mix'
 export default defineConfig({
   plugins: [
     mix({
-      handler: './server-vite.js',
+      handler: './kernel/dev/server-vite.js',
     }),
   ],
   build: {

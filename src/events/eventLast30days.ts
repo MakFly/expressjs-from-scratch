@@ -1,6 +1,6 @@
-import { Prisma, PrismaClient } from "@prisma/client";
-import { NextFunction, Response } from "express";
-import { Last30Days, Last30DaysType } from "../models/last30Days";
+import { PrismaClient } from "@prisma/client";
+import { Response } from "express";
+import { ModelLast30Days, Last30DaysType } from "../models/last30Days";
 import { Last30daysService } from "../services/utils/last30days.services";
 
 const prisma = new PrismaClient();
@@ -22,7 +22,7 @@ export class EventLast30Days {
     const idLastTrophies = await Last30daysService.findFirstLastTrophie();
 
     // You find on the user's profile page of data in last 30 days
-    const existLast30days: Last30Days[] = await prisma.last30days.findMany({
+    const existLast30days: ModelLast30Days[] = await prisma.last30days.findMany({
       where: {
         userId: userId,
       },
