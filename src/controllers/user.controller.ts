@@ -7,7 +7,6 @@ import { UserService } from "../services/utils/users.services";
 const prisma = new PrismaClient();
 
 class UserController {
-
   static listAll = async (req: Request, res: Response) => {
     // #swagger.tags = ['Users']
 
@@ -20,15 +19,21 @@ class UserController {
   };
 
   static getOneById = async (req: Request, res: Response) => {
-    //Get the ID from the url
+    // #swagger.tags = ['Users']
+
     const id: number = parseInt(req.params.id);
 
     try {
       //Get the user from database
-      const user = await UserService.getUserByid(id).then(user => user);
+      const user = await UserService.getUserByid(id).then((user) => user);
+      /* #swagger.responses[200] = { 
+        schema: { "$ref": "#/definitions/User" },
+        description: "User registered successfully." 
+      } */
       res.status(200).send({ user });
       return;
     } catch (error) {
+      // #swagger.responses[404] = { description: 'User not found.' }
       res.status(404).send("User not found");
       return;
     }
@@ -36,34 +41,35 @@ class UserController {
 
   // Find Role by id
   static getUserRole = async (req: Request, res: Response) => {
+    // #swagger.tags = ['Users']
 
-    const header: any = req.headers['authorization'];
+    const header: any = req.headers["authorization"];
     let token = header.split(" ")[1];
     let decode: any = jwtDecode(token);
 
     const user = await prisma.user.findUnique({
       where: {
-        id: decode.id
+        id: decode.id,
       },
       select: {
-        role: true
-      }
-    })
+        role: true,
+      },
+    });
 
-    // #swagger.responses[200] = { description: 'User role find successfully.' }
+    // #swagger.responses[200] = { description: 'User role successfully.' }
     res.status(200).send(user);
     return;
-  }
+  };
 
   static newUser = async (req: Request, res: Response) => {
     // #swagger.tags = ['Users']
 
     //Try to save. If fails, the email is already in use
     try {
-      await UserService.addUser(req.body)
+      await UserService.addUser(req.body);
     } catch (e) {
-      console.log(e);
-      res.status(409).send("email already in use");
+      // #swagger.responses[409] = { description: 'Email already in use.' }
+      res.status(409).send("Email already in use");
       return;
     }
 
@@ -74,13 +80,13 @@ class UserController {
 
   static editUser = async (req: Request, res: Response) => {
     // #swagger.tags = ['Users']
-    const id = parseInt(req.params.id)
+    const id = parseInt(req.params.id);
 
     try {
-      await UserService.getUserByid(id).then(user => user);
+      await UserService.getUserByid(id).then((user) => user);
       res.status(200);
     } catch (error) {
-      //If not found, send a 404 response
+      // #swagger.responses[404] = { description: 'User not found.' }
       res.status(404).send("User not found");
       return;
     }
@@ -89,28 +95,31 @@ class UserController {
     try {
       await UserService.updateUser(id, req.body);
     } catch (e) {
-      res.status(409).send("email already in use");
+      // #swagger.responses[409] = { description: 'Email already in use.' }
+      res.status(409).send("Email already in use");
       return;
     }
-    //After all send a 204 (no content, but accepted) response
+
     // #swagger.responses[204] = { description: 'User updated successfully.' }
     res.status(204).send();
   };
 
   static deleteUser = async (req: Request, res: Response) => {
-      //Get the ID from the url
-      const id = parseInt(req.params.id);
+    // #swagger.tags = ['Users']
 
-      try {
-          await UserService.getUserByid(id);
-      } catch (error) {
-          res.status(404).send("User not found");
-          return;
-      }
-      UserService.deleteUser(id);
+    const id = parseInt(req.params.id);
 
-      // #swagger.responses[204] = { description: 'User deleted successfully.' }
-      res.status(204).send();
+    try {
+      await UserService.getUserByid(id);
+    } catch (error) {
+      // #swagger.responses[404] = { description: 'User not found.' }
+      res.status(404).send("User not found");
+      return;
+    }
+    UserService.deleteUser(id);
+
+    // #swagger.responses[204] = { description: 'User deleted successfully.' }
+    res.status(204).send();
   };
 }
 

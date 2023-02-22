@@ -1,5 +1,5 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { last30daysDto } from "../../dto/last30daysDto";
+import { last30daysDto } from "../../dto/last30days.dto";
 
 const prisma = new PrismaClient();
 

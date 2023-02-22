@@ -1,15 +1,23 @@
 {
   "swagger": "2.0",
   "info": {
+    "title": "Application of sport by Atecna",
     "version": "1.0.0",
-    "title": "REST API",
     "description": ""
   },
   "host": "localhost:3000",
-  "basePath": "/",
+  "basePath": "/api",
   "schemes": [
     "http"
   ],
+  "securityDefinitions": {
+    "apiKeyAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Enter the token with the `Bearer: ` prefix, e.g. Bearer abcde12345"
+    }
+  },
   "paths": {
     "/auth/login": {
       "post": {
@@ -109,13 +117,16 @@
             "description": "User registered successfully."
           },
           "409": {
-            "description": "Conflict"
+            "description": "Email already in use."
           }
         }
       }
     },
     "/users/{id([0-9]+)}": {
       "get": {
+        "tags": [
+          "Users"
+        ],
         "description": "",
         "parameters": [
           {
@@ -127,13 +138,16 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "User registered successfully.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
           },
           "401": {
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Not Found"
+            "description": "User not found."
           }
         }
       },
@@ -161,14 +175,17 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Not Found"
+            "description": "User not found."
           },
           "409": {
-            "description": "Conflict"
+            "description": "Email already in use."
           }
         }
       },
       "delete": {
+        "tags": [
+          "Users"
+        ],
         "description": "",
         "parameters": [
           {
@@ -186,18 +203,21 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "Not Found"
+            "description": "User not found."
           }
         }
       }
     },
     "/users/role": {
       "get": {
+        "tags": [
+          "Users"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "User role find successfully."
+            "description": "User role successfully."
           },
           "401": {
             "description": "Unauthorized"
@@ -208,7 +228,7 @@
     "/users/trophies": {
       "get": {
         "tags": [
-          "Users"
+          "Trophy"
         ],
         "description": "",
         "parameters": [],
@@ -223,7 +243,7 @@
       },
       "post": {
         "tags": [
-          "Users"
+          "Trophy"
         ],
         "description": "",
         "parameters": [
@@ -268,7 +288,7 @@
     "/users/trophie/{id([0-9]+)}": {
       "get": {
         "tags": [
-          "Users"
+          "Trophy"
         ],
         "description": "",
         "parameters": [
@@ -292,7 +312,7 @@
     "/last/resume": {
       "get": {
         "tags": [
-          "Users"
+          "Last 30 days"
         ],
         "description": "",
         "parameters": [],
@@ -309,7 +329,7 @@
     "/last/profile": {
       "post": {
         "tags": [
-          "Users"
+          "Last 30 days"
         ],
         "description": "",
         "parameters": [],
@@ -333,7 +353,12 @@
           "404": {
             "description": "Not Found"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -342,22 +367,57 @@
         "description": "",
         "parameters": [
           {
-            "name": "body",
+            "name": "Workout",
             "in": "body",
+            "description": "Adding new workout.",
             "schema": {
               "type": "object",
               "properties": {
                 "distance": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 50.4
                 },
                 "time": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "10.50"
                 },
                 "checkpoint": {
-                  "example": "any"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "distance": {
+                        "type": "number",
+                        "example": 3
+                      },
+                      "time": {
+                        "type": "number",
+                        "example": 123
+                      },
+                      "coordinates": {
+                        "type": "object",
+                        "properties": {
+                          "lat": {
+                            "type": "number",
+                            "example": 50.66841
+                          },
+                          "lon": {
+                            "type": "number",
+                            "example": 3.1150411
+                          }
+                        }
+                      }
+                    }
+                  }
                 },
                 "workout": {
-                  "example": "any"
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  }
                 }
               }
             }
@@ -373,7 +433,12 @@
           "409": {
             "description": "Conflict"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/workout/details/": {
@@ -414,6 +479,25 @@
           "401": {
             "description": "Unauthorized"
           }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Jhon Doe"
+        },
+        "password": {
+          "type": "string",
+          "example": "abcd1234"
+        },
+        "role": {
+          "type": "string",
+          "example": "USER | ADMIN"
         }
       }
     }

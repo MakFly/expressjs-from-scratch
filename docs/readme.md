@@ -1,6 +1,5 @@
 # Warning : If you want to update this readme please make a pull request
 
-
 ## Install dependencies
 ```console
 $ npm install
@@ -21,19 +20,27 @@ It will start the server in vite :
 $ npm run dev
 ```
 
-## Access to database with prisma studio
+## Access to database with prisma studio without application see databases ( phpmyadmin / postegres ...)
 A window will be opened with the data of the database.
 You haven't need to open adminer in the browser if you want
 Use the command : 
-```
+```command
 $ npx prisma studio
 ```
 
-## Access to database with adminer session
+## Access to database with phpmyadmin ( in mac )
+```command
+$ make phpmyadmin
+```
+
+## Access to database with adminer ( in mac )
+```command
+$ make adminer
+```
+
+## Access to database with adminer session or phpmyadmin
 ```console
-$ http://localhost:9080
-$ Server: mysql
 $ login : root
-$ password : root
+$ password : without
 ```
 

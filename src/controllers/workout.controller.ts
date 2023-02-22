@@ -7,18 +7,45 @@ const prisma = new PrismaClient();
 class WorkoutController {
   static listAll = async (req: Request, res: Response) => {
     // #swagger.tags = ['Workout']
+    /* #swagger.security = [{
+        "apiKeyAuth": []
+    }] */
 
     //Get workouts from database
     const workouts: Workout[] = await prisma.workouts.findMany();
 
     if (workouts.length === 0) {
-      return res.status(404).json({ message: "No workouts found" });
+      return res.status(204).send([]);
     }
     return res.status(200).send(workouts);
   };
 
-  static newWorkout = async (req: Request, res: Response) => {
+  static addWorkout = async (req: Request, res: Response) => {
     // #swagger.tags = ['Workout']
+    /* #swagger.security = [{
+        "apiKeyAuth": []
+    }] */
+    /* #swagger.parameters['Workout'] = {
+        in: 'body',
+        description: 'Adding new workout.',
+        schema: {
+            "distance": 50.4,
+            "time": "10.50",
+            "checkpoint": [
+              {
+                "distance": 3,
+                "time": 123,
+                "coordinates": {
+                  "lat": 50.66841,
+                  "lon": 3.1150411
+                }
+              }
+            ],
+            "workout": {
+              "userId": 1
+            }
+        }
+    } */
 
     //Get parameters from the body
     let { distance, time, checkpoint, workout } = req.body;
