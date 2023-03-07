@@ -3,7 +3,7 @@
   "sideEffects": false,
   "scripts": {
     "start": "tsc && node dist/custom-server.js",
-    "dev": "npm run swagger-autogen && vite --port=3000",
+    "dev": "npm run swagger-autogen && vite --port=4000",
     "dev:old": "nodemon -L -e ts --exec \"npm run swagger-autogen && npm run build && npm start\"",
     "build": "tsc",
     "swagger-autogen": "node ./src/swagger.ts",

@@ -22,6 +22,10 @@ app.get('/', (req, res) => {
 
 app.use('/api', indexRouter);
 
+app.get('/api/data', (req, res, next) => {
+  return res.status(200).send({id: 1, name: "test"})
+})
+
 app.get('/one', (req, res, next) => {
   fsPromises.readFile('./one.txt') // arbitrary file
     .then(data => res.send(data))

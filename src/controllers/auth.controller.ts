@@ -13,12 +13,14 @@ class AuthController {
     //Check if username and password are set
     let { email, password } = req.body;
     if (!(email || password)) {
+      console.log(req.body)
       res.status(400).send({
         message: "missing_required_parameter",
         info: "email or password",
       });
+      return;
     }
-
+    
     let userRepository: User;
     try {
       //Get user from database
@@ -46,7 +48,7 @@ class AuthController {
         const refreshToken = this.refreshToken(user);
 
         //Send the jwt in the response
-        res.send({ accessToken, refreshToken });
+        res.status(201).send({ accessToken, refreshToken, roles: user.role });
         return;
       } catch (error) {
         res.status(401).send(error);
